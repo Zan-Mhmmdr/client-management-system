@@ -1,11 +1,5 @@
-import { Outlet } from "react-router-dom";
+import Layout from "./components/Layout";
+import UserLogin from "./components/UserLogin";
+import UserRegister from "./components/UserRegister";
 
-const AuthPage = () => {
-  return (
-    <div className="bg-[#0F0F0F] text-[#EAEAEA] min-h-screen flex items-center justify-center p-4">
-      <Outlet />
-    </div>
-  );
-};
-
-export default AuthPage;
+export { Layout, UserLogin, UserRegister };
