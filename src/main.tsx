@@ -3,9 +3,9 @@ import { createRoot } from "react-dom/client";
 import "./style/index.css";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
-import UserLogin from "./components/User/UserLogin";
+import UserLogin from "./features/authentication/components/UserLogin";
 import "./style/index.css";
-import UserRegister from "./components/User/UserRegister";
+import UserRegister from "./features/authentication/components/UserRegister";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
