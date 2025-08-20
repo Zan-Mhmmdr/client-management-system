@@ -42,11 +42,11 @@ export function UserRegister() {
               />
             </div>
             <div className="grid gap-1">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">Name</Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
+                id="name"
+                type="name"
+                placeholder="Name"
                 required
                 className="bg-[#1A1A1A] border border-[#333] text-white placeholder-gray-500"
               />
@@ -55,7 +55,7 @@ export function UserRegister() {
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
-                type="password"
+                type="text"
                 required
                 className="bg-[#1A1A1A] border border-[#333] text-white"
               />

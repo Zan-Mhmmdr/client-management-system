@@ -32,11 +32,11 @@ export function UserLogin() {
         <form>
           <div className="flex flex-col gap-4">
             <div className="grid gap-1">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">Username</Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
+                id="username"
+                type="text"
+                placeholder="Username"
                 required
                 className="bg-[#1A1A1A] border border-[#333] text-white placeholder-gray-500"
               />
