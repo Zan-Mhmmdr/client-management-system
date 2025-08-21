@@ -75,7 +75,7 @@ export function UserRegister() {
       <CardFooter className="flex flex-col gap-2 mt-4">
         <Button
           type="submit"
-          className="w-full bg-[#63b0c8] hover:bg-[#79dbef] text-slate-800 font-medium cursor-pointer"
+          className="w-full bg-gradient-to-r from-[#63b0c8] to-[#79dbef] text-slate-800 font-medium cursor-pointer shadow-md hover:scale-105 transition duration-200"
         >
           Register
         </Button>
