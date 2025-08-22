@@ -4,7 +4,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
 import { useState } from "react";
 import { useLocalStorage } from "react-use";
-import { userUpdateProfile } from "../services/contactService";
+import {
+  userUpdatePassword,
+  userUpdateProfile,
+} from "../services/contactService";
 
 const UserProfile = () => {
   const [name, setName] = useState("");
@@ -28,12 +31,23 @@ const UserProfile = () => {
     }
   };
 
-  const handleSubmitPassword = () => {
+  const handleSubmitPassword = async () => {
     if (password !== confirmPassword) {
       alert("Password tidak boleh sama!");
     }
 
-    const response = 
+    const response = await userUpdatePassword(token, password);
+    const responseBody = await response.json();
+    console.log(responseBody);
+
+    if (responseBody.status === 200) {
+      alert("Failed to update password: " + responseBody.errors);
+      return;
+    } else {
+      alert("Password updated successfully!");
+      setPassword("");
+      setConfirmPassword("");
+    }
   };
 
   return (
