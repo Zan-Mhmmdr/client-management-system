@@ -103,7 +103,9 @@ export function UserRegister() {
             <div className="grid gap-1">
               <Label htmlFor="password">Confirm password</Label>
               <Input
-                id="password"
+                id="confirmPassword"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 type="password"
                 required
                 className="bg-[#1A1A1A] border border-[#333] text-white"
