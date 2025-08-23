@@ -5,6 +5,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { UserLogin, UserRegister, Layout } from "./features/authentication";
 import DashboardLayout from "./layouts/DashboardLayout";
 import UserProfile from "./features/contacts/components/UserProfile";
+import UserLogout from "./features/authentication/components/UserLogout";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -14,16 +15,14 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/login" element={<UserLogin />} />
           <Route path="/register" element={<UserRegister />} />
+          <Route path="/logout" element={<UserLogout />} />
         </Route>
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route path="users">
             <Route path="profile" element={<UserProfile />} />
           </Route>
 
-
-          <Route path="contacts">
-            
-          </Route>
+          <Route path="contacts"></Route>
         </Route>
       </Routes>
     </BrowserRouter>

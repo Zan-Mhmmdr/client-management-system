@@ -49,7 +49,13 @@ export function UserLogin() {
       } else {
         alert("Token not found in a response ");
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("An error occurred during login. Please try again.");
+    } finally {
+      setUsername("");
+      setPassword("");
+    }
   };
 
   return (

@@ -29,7 +29,7 @@ const DashboardLayout = () => {
               </li>
               <li>
                 <Link
-                  to="/dashboard/users/logout"
+                  to="/logout"
                   className="text-[#EAEAEA] hover:text-white flex items-center transition-colors duration-200"
                 >
                   <i className="fas fa-sign-out-alt mr-2" />
