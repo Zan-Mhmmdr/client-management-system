@@ -1,11 +1,10 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./style/index.css";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { UserLogin, UserRegister, Layout } from "./features/authentication";
 import DashboardLayout from "./layouts/DashboardLayout";
-import UserProfile from "./features/contacts/components/UserProfile";
-import UserLogout from "./features/authentication/components/UserLogout";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { UserLogin, UserRegister, Layout, UserLogout } from "./features/authentication";
+import { ContactCreate, ContactList, UserProfile } from "./features/contacts";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -22,7 +21,12 @@ createRoot(document.getElementById("root")!).render(
             <Route path="profile" element={<UserProfile />} />
           </Route>
 
-          <Route path="contacts"></Route>
+          <Route path="contacts">
+            <Route index element={<ContactList />} />
+            <Route path="create" element={<ContactCreate />} />
+
+
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

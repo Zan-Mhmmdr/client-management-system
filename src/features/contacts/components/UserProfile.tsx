@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useEffectOnce, useLocalStorage } from "react-use";
 import {
   userDetail,
