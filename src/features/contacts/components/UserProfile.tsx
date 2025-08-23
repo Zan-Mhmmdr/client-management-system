@@ -2,9 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
-import { useState } from "react";
-import { useLocalStorage } from "react-use";
+import { useEffect, useState } from "react";
+import { useEffectOnce, useLocalStorage } from "react-use";
 import {
+  userDetail,
   userUpdatePassword,
   userUpdateProfile,
 } from "../services/contactService";
@@ -14,6 +15,28 @@ const UserProfile = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [token, _] = useLocalStorage("token", "");
+
+  const fetchDetailUser = async () => {
+    const response = await userDetail(token);
+    const responseBody = await response.json();
+
+    if (responseBody.status === 200) {
+      alert("Failed to fetch user details: " + responseBody.errors);
+      setName(responseBody.data.name);
+    } else {
+      setName(responseBody.data.name || "");
+    }
+  };
+
+  useEffectOnce(() => {
+    try {
+      if (token) {
+        fetchDetailUser();
+      }
+    } catch (error) {
+      console.error("Fetch user detail error:", error);
+    }
+  });
 
   const handleSubmitProfile = async (e: React.FormEvent) => {
     e.preventDefault();
