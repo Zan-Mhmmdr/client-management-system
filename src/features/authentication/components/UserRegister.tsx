@@ -4,7 +4,6 @@ import {
   CardAction,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -36,6 +35,7 @@ export function UserRegister() {
 
     const response = await userRegister(userInputData);
     const responseBody = await response.json();
+    console.log(responseBody);
 
     if (responseBody.status === 200) {
       alert("Registration successful! You can now log in.");
@@ -95,7 +95,7 @@ export function UserRegister() {
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                type="text"
+                type="password"
                 required
                 className="bg-[#1A1A1A] border border-[#333] text-white"
               />
@@ -111,17 +111,15 @@ export function UserRegister() {
                 className="bg-[#1A1A1A] border border-[#333] text-white"
               />
             </div>
+            <Button
+              type="submit"
+              className="w-full bg-gradient-to-r from-[#63b0c8] to-[#79dbef] text-slate-800 font-medium cursor-pointer shadow-md hover:scale-105 transition duration-200"
+            >
+              Register
+            </Button>
           </div>
         </form>
       </CardContent>
-      <CardFooter className="flex flex-col gap-2 mt-4">
-        <Button
-          type="submit"
-          className="w-full bg-gradient-to-r from-[#63b0c8] to-[#79dbef] text-slate-800 font-medium cursor-pointer shadow-md hover:scale-105 transition duration-200"
-        >
-          Register
-        </Button>
-      </CardFooter>
     </Card>
   );
 }

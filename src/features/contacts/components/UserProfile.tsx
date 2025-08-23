@@ -96,7 +96,7 @@ const UserProfile = () => {
           <CardContent>
             <form onSubmit={handleSubmitProfile} className="space-y-4">
               <div className="grid gap-2">
-                <Label htmlFor="name">Username</Label>
+                <Label htmlFor="name">Name</Label>
                 <Input
                   id="name"
                   name="username"

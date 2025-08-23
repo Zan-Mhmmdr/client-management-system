@@ -3,8 +3,14 @@ import { createRoot } from "react-dom/client";
 import "./style/index.css";
 import DashboardLayout from "./layouts/DashboardLayout";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { UserLogin, UserRegister, Layout, UserLogout } from "./features/authentication";
+import {
+  UserLogin,
+  UserRegister,
+  Layout,
+  UserLogout,
+} from "./features/authentication";
 import { ContactCreate, ContactList, UserProfile } from "./features/contacts";
+import ProtectedLayout from "./features/authentication/components/ProtectedLayout";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -16,7 +22,14 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/register" element={<UserRegister />} />
           <Route path="/logout" element={<UserLogout />} />
         </Route>
-        <Route path="/dashboard" element={<DashboardLayout />}>
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedLayout>
+              <DashboardLayout />
+            </ProtectedLayout>
+          }
+        >
           <Route path="users">
             <Route path="profile" element={<UserProfile />} />
           </Route>
@@ -24,8 +37,6 @@ createRoot(document.getElementById("root")!).render(
           <Route path="contacts">
             <Route index element={<ContactList />} />
             <Route path="create" element={<ContactCreate />} />
-
-
           </Route>
         </Route>
       </Routes>

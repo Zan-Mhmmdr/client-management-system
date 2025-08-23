@@ -4,7 +4,6 @@ import {
   CardAction,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -16,7 +15,7 @@ import { userLogin } from "../services/authServices";
 import { useLocalStorage } from "react-use";
 
 export function UserLogin() {
-  const [usernname, setUsername] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [__, setToken] = useLocalStorage("token", "");
   const navigate = useNavigate();
@@ -80,9 +79,10 @@ export function UserLogin() {
               <Label htmlFor="email">Username</Label>
               <Input
                 id="username"
+                name="username"
                 type="text"
                 placeholder="Username"
-                value={usernname}
+                value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
                 className="bg-[#1A1A1A] border border-[#333] text-white placeholder-gray-500"
@@ -92,6 +92,7 @@ export function UserLogin() {
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
+                name="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -99,24 +100,21 @@ export function UserLogin() {
                 className="bg-[#1A1A1A] border border-[#333] text-white"
               />
             </div>
+            <Button
+              type="submit"
+              className="w-full bg-gradient-to-r from-[#63b0c8] to-[#79dbef] text-slate-800 font-medium cursor-pointer shadow-md hover:scale-105 transition duration-200"
+            >
+              Login
+            </Button>
+            <Button
+              variant="outline"
+              className="w-full border-[#63b0c8] text-slate-800 hover:bg-[#0F0F0F]/60 hover:text-white cursor-pointer hover:scale-105 transition duration-200"
+            >
+              Login with Google
+            </Button>
           </div>
         </form>
       </CardContent>
-      <CardFooter className="flex flex-col gap-2 mt-4">
-        <Button
-          type="submit"
-          className="w-full bg-gradient-to-r from-[#63b0c8] to-[#79dbef] text-slate-800 font-medium cursor-pointer shadow-md hover:scale-105 transition duration-200"
-        >
-          Login
-        </Button>
-
-        <Button
-          variant="outline"
-          className="w-full border-[#63b0c8] text-slate-800 hover:bg-[#0F0F0F]/60 hover:text-white cursor-pointer hover:scale-105 transition duration-200"
-        >
-          Login with Google
-        </Button>
-      </CardFooter>
     </Card>
   );
 }

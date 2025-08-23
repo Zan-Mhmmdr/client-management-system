@@ -1,6 +1,6 @@
-import InputWithIcon from "@/components/common/InputWithIcon";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import InputWithIcon from "@/components/common/InputWithIcon";
 
 interface Contact {
   id: string | number;
@@ -9,27 +9,57 @@ interface Contact {
   email: string;
   phone: string;
 }
+const ContactList= () => {
+  const [contacts, setContacts] = useState<Contact[]>([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-interface ContactListProps {
-  contacts?: Contact[];
-  page: number;
-  totalPages: number;
-  handleSearchContacts: (e: React.FormEvent<HTMLFormElement>) => void;
-  handlePageChange: (newPage: number) => void;
-  handleContactDelete: (id: string | number) => void;
-}
-
-const ContactList: React.FC<ContactListProps> = ({
-  contacts = [], // Default ke array kosong
-  page,
-  totalPages,
-  handleSearchContacts,
-  handlePageChange,
-  handleContactDelete,
-}) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+
+  useEffect(() => {
+    fetchContacts();
+  }, [page]);
+
+  const fetchContacts = async () => {
+    try {
+      // Dummy fetch
+      const dummyData: Contact[] = [
+        {
+          id: 1,
+          first_name: "John",
+          last_name: "Doe",
+          email: "john@example.com",
+          phone: "08123456789",
+        },
+        // Tambahkan data lain jika perlu
+      ];
+      setContacts(dummyData);
+      setTotalPages(3); // Ganti dengan data dari API kalau sudah
+    } catch (error) {
+      console.error("Failed to fetch contacts:", error);
+    }
+  };
+
+  const handleSearchContacts = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("Searching for:", name, email, phone);
+    // Panggil API filter kalau ada
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleContactDelete = (id: string | number) => {
+    const confirmed = window.confirm("Are you sure you want to delete?");
+    if (!confirmed) return;
+
+    const updatedContacts = contacts.filter((c) => c.id !== id);
+    setContacts(updatedContacts);
+    // Panggil API delete kalau pakai backend
+  };
 
   const getPages = () => Array.from({ length: totalPages }, (_, i) => i + 1);
 
@@ -40,20 +70,9 @@ const ContactList: React.FC<ContactListProps> = ({
         <h1 className="text-2xl font-bold text-white">My Contacts</h1>
       </div>
 
-      {/* Search Section */}
-      <div className="bg-[#0F0F0F] text-[#EAEAEA] border border-[#008b8b] shadow-[0_0_20px_#aec8d7] rounded-xl p-6 mb-8 animate-fade-in">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center">
-            <i className="fas fa-search text-blue-400 mr-3" />
-            <h2 className="text-xl font-semibold">Search Contacts</h2>
-          </div>
-        </div>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSearchContacts(e);
-          }}
-        >
+      {/* Search Form */}
+      <div className="bg-[#0F0F0F] text-[#EAEAEA] border border-[#008b8b] shadow-[0_0_20px_#aec8d7] rounded-xl p-6 mb-8">
+        <form onSubmit={handleSearchContacts}>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             <InputWithIcon
               id="search_name"
@@ -100,8 +119,8 @@ const ContactList: React.FC<ContactListProps> = ({
 
       {/* Contact Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Create New Contact Card */}
-        <div className="bg-[#0F0F0F] text-[#EAEAEA] border border-dashed border-[#008b8b] shadow-[0_0_20px_#aec8d7] rounded-xl overflow-hidden card-hover animate-fade-in">
+        {/* Create New Contact */}
+        <div className="bg-[#0F0F0F] text-[#EAEAEA] border border-dashed border-[#008b8b] shadow-[0_0_20px_#aec8d7] rounded-xl overflow-hidden">
           <Link to="create" className="block p-6 h-full">
             <div className="flex flex-col items-center justify-center h-full text-center">
               <div className="w-20 h-20 bg-gradient-to-r from-[#63b0c8] to-[#79dbef] rounded-full flex items-center justify-center mb-5 shadow-lg hover:scale-110 transition-transform">
@@ -115,11 +134,11 @@ const ContactList: React.FC<ContactListProps> = ({
           </Link>
         </div>
 
-        {/* List Contacts */}
+        {/* Contact List */}
         {contacts.map((contact) => (
           <div
             key={contact.id}
-            className="bg-[#0F0F0F] text-[#EAEAEA] border border-[#008b8b] shadow-[0_0_20px_#aec8d7] rounded-xl overflow-hidden card-hover animate-fade-in"
+            className="bg-[#0F0F0F] text-[#EAEAEA] border border-[#008b8b] shadow-[0_0_20px_#aec8d7] rounded-xl overflow-hidden"
           >
             <div className="p-6">
               <Link
@@ -180,15 +199,17 @@ const ContactList: React.FC<ContactListProps> = ({
 
       {/* Pagination */}
       <div className="mt-10 flex justify-center">
-        <nav className="flex items-center space-x-3 bg-[#0F0F0F] text-[#EAEAEA] border border-[#008b8b] shadow-[0_0_20px_#aec8d7] rounded-xl p-3 animate-fade-in">
+        <nav className="flex items-center space-x-3 bg-[#0F0F0F] text-[#EAEAEA] border border-[#008b8b] shadow-[0_0_20px_#aec8d7] rounded-xl p-3">
           {page > 1 && (
             <button
               onClick={() => handlePageChange(page - 1)}
               className="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 transition"
             >
-              <i className="fas fa-chevron-left mr-2" /> Previous
+              <i className="fas fa-chevron-left mr-2" />
+              Previous
             </button>
           )}
+
           {getPages().map((pageNumber) => (
             <button
               key={pageNumber}
@@ -202,6 +223,7 @@ const ContactList: React.FC<ContactListProps> = ({
               {pageNumber}
             </button>
           ))}
+
           {page < totalPages && (
             <button
               onClick={() => handlePageChange(page + 1)}
