@@ -8,9 +8,15 @@ import {
   UserRegister,
   Layout,
   UserLogout,
+  ProtectedLayout,
 } from "./features/authentication";
-import { ContactCreate, ContactList, UserProfile } from "./features/contacts";
-import ProtectedLayout from "./features/authentication/components/ProtectedLayout";
+import {
+  ContactCreate,
+  ContactDetail,
+  ContactEdit,
+  ContactList,
+  UserProfile,
+} from "./features/contacts";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -22,14 +28,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/register" element={<UserRegister />} />
           <Route path="/logout" element={<UserLogout />} />
         </Route>
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedLayout>
-              <DashboardLayout />
-            </ProtectedLayout>
-          }
-        >
+        <Route path="/dashboard" element={<DashboardLayout />}>
           <Route path="users">
             <Route path="profile" element={<UserProfile />} />
           </Route>
@@ -37,6 +36,11 @@ createRoot(document.getElementById("root")!).render(
           <Route path="contacts">
             <Route index element={<ContactList />} />
             <Route path="create" element={<ContactCreate />} />
+            <Route path=":id">
+              <Route index element={<ContactDetail />} />
+              <Route path="edit" element={<ContactEdit />} />
+
+            </Route>
           </Route>
         </Route>
       </Routes>

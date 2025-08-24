@@ -55,8 +55,42 @@ export const contactCreate = async (
       Accept: "application/json",
       authorization: token,
     },
-    body: JSON.stringify({
-      contact,
-    }),
+    body: JSON.stringify(contact),
+  });
+};
+
+interface ContactListData {
+  name?: string;
+  email?: string;
+  phone?: string;
+  page?: number;
+}
+
+export const contactList = async (token: any, contact: ContactListData) => {
+  const url = new URL(`${import.meta.env.VITE_API_PATH}/contacts`);
+
+  if (contact.name) url.searchParams.append("name", contact.name);
+  if (contact.email) url.searchParams.append("email", contact.email);
+  if (contact.phone) url.searchParams.append("phone", contact.phone);
+  if (contact.page) url.searchParams.append("page", contact.page.toString());
+
+  return await fetch(url.toString(), {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: token,
+    },
+  });
+};
+
+export const contactDetail = async (token: any, contactId: number) => {
+  return await fetch(`${import.meta.env.VITE_API_PATH}/contacts/${contactId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: token,
+    },
   });
 };

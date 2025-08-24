@@ -36,7 +36,7 @@ const ContactCreate = () => {
     const responseBody = await response.json();
     console.log(responseBody);
 
-    if (responseBody.status === 200) {
+    if (responseBody.status !== 200) {
       alert("Failed to create contact: " + responseBody.errors);
       return;
     } else {
@@ -45,7 +45,6 @@ const ContactCreate = () => {
     }
   };
 
-  
   return (
     <Card className="w-full max-w-2xl mx-auto bg-[#0F0F0F] text-[#EAEAEA] border border-[#008b8b] shadow-[0_0_20px_#aec8d7]">
       <CardHeader>
@@ -112,25 +111,24 @@ const ContactCreate = () => {
               className="bg-[#1A1A1A] border border-[#333] text-white placeholder-gray-500"
             />
           </div>
+          <CardFooter className="flex justify-end gap-3 mt-4 p-0">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => navigate("/dashboard/contacts")}
+              className="border-[#63b0c8] text-slate-800 hover:bg-[#0F0F0F]/60 hover:text-white cursor-pointer hover:scale-105 transition duration-200"
+            >
+              Cancel
+            </Button>
+
+            <Button
+              type="submit"
+              className="bg-gradient-to-r from-[#63b0c8] to-[#79dbef] text-slate-800 font-medium shadow-md hover:scale-105 transition duration-200"
+            >
+              Create Contact
+            </Button>
+          </CardFooter>
         </CardContent>
-
-        <CardFooter className="flex justify-end gap-3 mt-4">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => navigate("/dashboard/contacts")}
-            className="border-[#63b0c8] text-slate-800 hover:bg-[#0F0F0F]/60 hover:text-white cursor-pointer hover:scale-105 transition duration-200"
-          >
-            Cancel
-          </Button>
-
-          <Button
-            type="submit"
-            className="bg-gradient-to-r from-[#63b0c8] to-[#79dbef] text-slate-800 font-medium shadow-md hover:scale-105 transition duration-200"
-          >
-            Create Contact
-          </Button>
-        </CardFooter>
       </form>
     </Card>
   );

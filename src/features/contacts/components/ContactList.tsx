@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import InputWithIcon from "@/components/common/InputWithIcon";
+import { contactList } from "../services/contactService";
+import { useLocalStorage } from "react-use";
 
 interface Contact {
   id: string | number;
@@ -9,7 +11,8 @@ interface Contact {
   email: string;
   phone: string;
 }
-const ContactList= () => {
+
+const ContactList = () => {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -17,35 +20,35 @@ const ContactList= () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-
-  useEffect(() => {
-    fetchContacts();
-  }, [page]);
+  const [token, _] = useLocalStorage("token", "");
 
   const fetchContacts = async () => {
     try {
-      // Dummy fetch
-      const dummyData: Contact[] = [
-        {
-          id: 1,
-          first_name: "John",
-          last_name: "Doe",
-          email: "john@example.com",
-          phone: "08123456789",
-        },
-        // Tambahkan data lain jika perlu
-      ];
-      setContacts(dummyData);
-      setTotalPages(3); // Ganti dengan data dari API kalau sudah
+      const response = await contactList(token, { name, email, phone, page });
+      const responseBody = await response.json();
+      console.log(responseBody);
+
+      if (response.ok) {
+        const { data } = responseBody;
+        setContacts(data?.contacts || []);
+        setTotalPages(data?.total_pages || 1);
+      } else {
+        const errorMessage =
+          responseBody.errors ??
+          responseBody.message ??
+          `HTTP ${response.status}`;
+        alert("Failed to fetch contacts: " + errorMessage);
+      }
     } catch (error) {
       console.error("Failed to fetch contacts:", error);
     }
   };
 
-  const handleSearchContacts = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSearchContacts = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("Searching for:", name, email, phone);
-    // Panggil API filter kalau ada
+    setPage(1);
+    await fetchContacts();
   };
 
   const handlePageChange = (newPage: number) => {
@@ -62,6 +65,11 @@ const ContactList= () => {
   };
 
   const getPages = () => Array.from({ length: totalPages }, (_, i) => i + 1);
+
+  useEffect(() => {
+    console.log("useEffect triggered with", { name, email, phone, page });
+    fetchContacts();
+  }, [name, email, phone, page]);
 
   return (
     <main className="container mx-auto px-4 py-8 flex-grow">
@@ -82,7 +90,6 @@ const ContactList= () => {
               placeholder="Search by name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              required
             />
             <InputWithIcon
               id="search_email"
@@ -92,7 +99,6 @@ const ContactList= () => {
               placeholder="Search by email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required
             />
             <InputWithIcon
               id="search_phone"
@@ -102,7 +108,6 @@ const ContactList= () => {
               placeholder="Search by phone"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              required
             />
           </div>
           <div className="mt-5 text-right">
