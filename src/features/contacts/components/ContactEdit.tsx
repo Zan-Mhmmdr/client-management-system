@@ -10,8 +10,8 @@ import {
 } from "@/components/ui/card";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { contactUpdate } from "../services/contactService";
-import { useLocalStorage } from "react-use";
+import { contactDetail, contactUpdate } from "../services/contactService";
+import { useEffectOnce, useLocalStorage } from "react-use";
 
 const ContactEdit = () => {
   const [firstName, setFirstName] = useState("");
@@ -19,6 +19,26 @@ const ContactEdit = () => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [token, _] = useLocalStorage("token", "");
+
+  const fetchContact = async () => {
+    if (!token) return;
+
+    try {
+      const response = await contactDetail(token, Number(id));
+      const responseBody = await response.json();
+
+      if (responseBody.status === 200) {
+        setFirstName(responseBody.data.first_name || "");
+        setLastName(responseBody.data.last_name || "");
+        setEmail(responseBody.data.email || "");
+        setPhone(responseBody.data.phone || "");
+      } else {
+        alert("Failed to fetch contact details: " + responseBody.errors);
+      }
+    } catch (error) {
+      console.error("Fetch contact error:", error);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,6 +58,10 @@ const ContactEdit = () => {
       console.error("Update contact error:", error);
     }
   };
+
+  useEffectOnce(() => {
+    fetchContact();
+  });
 
   return (
     <div className="max-w-2xl mx-auto animate-fade-in">
