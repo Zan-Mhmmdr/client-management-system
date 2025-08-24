@@ -61,9 +61,6 @@ const ContactList = () => {
     const confirmed = window.confirm("Are you sure you want to delete?");
     if (!confirmed) return;
 
-    const updatedContacts = contacts.filter((c) => c.id !== id);
-    setContacts(updatedContacts);
-
     const response = await contactDelete(token, id);
     const responseBody = await response.json();
     console.log(responseBody);

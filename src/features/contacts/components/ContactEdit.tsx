@@ -10,15 +10,33 @@ import {
 } from "@/components/ui/card";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { contactUpdate } from "../services/contactService";
+import { useLocalStorage } from "react-use";
 
 const ContactEdit = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [token, _] = useLocalStorage("token", "");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    try {
+      const response = await contactUpdate(token, {
+        id: Number(id),
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        phone,
+      });
+      const responseBody = await response.json();
+      console.log(responseBody);
+      alert("Contact updated successfully!");
+    } catch (error) {
+      console.error("Update contact error:", error);
+    }
   };
 
   return (

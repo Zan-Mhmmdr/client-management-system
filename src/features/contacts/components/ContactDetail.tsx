@@ -35,14 +35,12 @@ const ContactDetail = () => {
       if (responseBody.status === 200) {
         setContact(responseBody.data);
         setAddresses(responseBody.data.addresses || []);
-      } else {
-        alert("Failed to fetch contact: " + responseBody.errors);
       }
     } catch (error) {
       console.error("Fetch contact error:", error);
     }
   };
-  
+
   const handleContactDelete = async (id: string | number) => {
     const confirmed = window.confirm("Are you sure you want to delete?");
     if (!confirmed) return;
@@ -50,7 +48,6 @@ const ContactDetail = () => {
     const response = await contactDelete(token, id);
     const responseBody = await response.json();
     console.log(responseBody);
-    
   };
 
   return (
