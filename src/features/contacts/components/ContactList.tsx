@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import InputWithIcon from "@/components/common/InputWithIcon";
-import { contactList } from "../services/contactService";
+import { contactDelete, contactList } from "../services/contactService";
 import { useLocalStorage } from "react-use";
 
 interface Contact {
@@ -29,9 +29,11 @@ const ContactList = () => {
       console.log(responseBody);
 
       if (response.ok) {
-        const { data } = responseBody;
-        setContacts(data?.contacts || []);
-        setTotalPages(data?.total_pages || 1);
+        const data = responseBody.data; // This is the array of contacts
+        const paging = responseBody.paging; // Pagination info
+
+        setContacts(data || []);
+        setTotalPages(paging?.total_page || 1);
       } else {
         const errorMessage =
           responseBody.errors ??
@@ -47,21 +49,25 @@ const ContactList = () => {
   const handleSearchContacts = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("Searching for:", name, email, phone);
-    setPage(1);
     await fetchContacts();
+    setPage(1);
   };
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
   };
 
-  const handleContactDelete = (id: string | number) => {
+  const handleContactDelete = async (id: string | number) => {
     const confirmed = window.confirm("Are you sure you want to delete?");
     if (!confirmed) return;
 
     const updatedContacts = contacts.filter((c) => c.id !== id);
     setContacts(updatedContacts);
-    // Panggil API delete kalau pakai backend
+
+    const response = await contactDelete(token, id);
+    const responseBody = await response.json();
+    console.log(responseBody);
+    
   };
 
   const getPages = () => Array.from({ length: totalPages }, (_, i) => i + 1);
