@@ -9,7 +9,7 @@ import {
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useEffectOnce, useLocalStorage } from "react-use";
-import { contactDetail } from "../services/contactService";
+import { contactDelete, contactDetail } from "../services/contactService";
 
 const ContactDetail = () => {
   const { id } = useParams();
@@ -42,11 +42,16 @@ const ContactDetail = () => {
       console.error("Fetch contact error:", error);
     }
   };
+  
+  const handleContactDelete = async (id: string | number) => {
+    const confirmed = window.confirm("Are you sure you want to delete?");
+    if (!confirmed) return;
 
-  const handleDeleteAddress = async (address:any) => {
+    const response = await contactDelete(token, id);
+    const responseBody = await response.json();
+    console.log(responseBody);
     
-
-  }
+  };
 
   return (
     <div className="max-w-3xl mx-auto p-6">
@@ -147,7 +152,7 @@ const ContactDetail = () => {
                 </Link>
                 <Button
                   variant="destructive"
-                  onClick={() => handleDeleteAddress(address.id)}
+                  onClick={() => handleContactDelete(address.id)}
                   className="hover:scale-105"
                 >
                   Delete
