@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { contactDetail, contactUpdate } from "../services/contactService";
 import { useEffectOnce, useLocalStorage } from "react-use";
 
@@ -19,6 +19,8 @@ const ContactEdit = () => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [token, _] = useLocalStorage("token", "");
+  const { id } = useParams();
+  const navigate = useNavigate();
 
   const fetchContact = async () => {
     if (!token) return;
@@ -43,6 +45,11 @@ const ContactEdit = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!token || !id) {
+      alert("Missing token or contact ID.");
+      return;
+    }
+
     try {
       const response = await contactUpdate(token, {
         id: Number(id),
@@ -54,6 +61,7 @@ const ContactEdit = () => {
       const responseBody = await response.json();
       console.log(responseBody);
       alert("Contact updated successfully!");
+      navigate(`/dashboard/contacts`);
     } catch (error) {
       console.error("Update contact error:", error);
     }
