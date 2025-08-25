@@ -17,6 +17,7 @@ import {
   ContactList,
   UserProfile,
 } from "./features/contacts";
+import AddressCreate from "./features/addresses/components/AddressCreate ";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -39,7 +40,9 @@ createRoot(document.getElementById("root")!).render(
             <Route path=":id">
               <Route index element={<ContactDetail />} />
               <Route path="edit" element={<ContactEdit />} />
-
+              <Route path="addresses">
+                <Route path="create" element={<AddressCreate />} />
+              </Route>
             </Route>
           </Route>
         </Route>
