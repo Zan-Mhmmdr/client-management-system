@@ -18,6 +18,7 @@ import {
   UserProfile,
 } from "./features/contacts";
 import AddressCreate from "./features/addresses/components/AddressCreate ";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
