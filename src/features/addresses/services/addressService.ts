@@ -1,21 +1,19 @@
-type AddressData = {
-  street: string;
-  city: string;
-  province: string;
-  country: string;
-  postal_code: string;
-};
+type AddressCreate = {
+    street: string;
+    city: string;
+    province: string;
+    postal_code: string;
+    country: string;
+}
 
-export const addressCreate = async (contactId: number, addressData: AddressData) => {
-  return await fetch(
-    `${import.meta.env.VITE_API_PATH}/users/contacts/${contactId}/addresses`,
-    {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(addressData),
-    }
-  );
-};
+export const addressesCreate = async (token: any, id: any, Address: AddressCreate) => {
+    return fetch(`${import.meta.env.VITE_API_PATH}/contacts/${id}/addresses`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': token,
+        },
+        body: JSON.stringify(Address)
+    })
+}
