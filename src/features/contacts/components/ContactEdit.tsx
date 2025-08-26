@@ -34,9 +34,7 @@ const ContactEdit = () => {
         setLastName(responseBody.data.last_name || "");
         setEmail(responseBody.data.email || "");
         setPhone(responseBody.data.phone || "");
-      } else {
-        alert("Failed to fetch contact details: " + responseBody.errors);
-      }
+      } 
     } catch (error) {
       console.error("Fetch contact error:", error);
     }

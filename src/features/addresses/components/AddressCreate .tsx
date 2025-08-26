@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { use, useState } from "react";
 import {
   Card,
   CardHeader,
@@ -9,34 +9,56 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
+import { addressCreate } from "../services/addressService";
+
+interface Contact {
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+  phone?: string;
+  [key: string]: any;
+}
 
 export default function AddAddressForm() {
-  const [form, setForm] = useState({
-    street: "",
-    city: "",
-    province: "",
-    country: "",
-    postal_code: "",
-  });
+  const [street, setStreet] = useState("");
+  const [city, setCity] = useState("");
+  const [province, setProvince] = useState("");
+  const [country, setCountry] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [contact, setContact] = useState<Contact>({});
 
-  const contact = {
-    first_name: "John",
-    last_name: "Doe",
-    email: "john@example.com",
-    phone: "+628123456789",
-  };
-
-  const id = 1;
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Submitted:", form);
+
+    const contact = {
+      street,
+      city,
+      province,
+      country,
+      postal_code: postalCode,
+    };
+
+    try {
+      const response = await addressCreate(id, contact);
+      const responseBody = await response.json();
+      console.log(responseBody);
+
+      if (response.ok) {
+        // Reset form fields
+        setStreet("");
+        setCity("");
+        setProvince("");
+        setCountry("");
+        setPostalCode("");
+
+        navigate(`/dashboard/contacts/${id}`);
+      }
+    } catch (error) {
+      console.error("Error creating address:", error);
+    }
   };
 
   return (
@@ -60,9 +82,9 @@ export default function AddAddressForm() {
           <CardDescription className="text-sm text-[#888]">
             Add address details for{" "}
             <span className="text-white font-medium">
-              {contact.first_name} {contact.last_name}
+              {contact?.first_name} {contact?.last_name}
             </span>{" "}
-            ({contact.email} / {contact.phone})
+            ({contact?.email} / {contact?.phone})
           </CardDescription>
         </CardHeader>
 
@@ -77,8 +99,8 @@ export default function AddAddressForm() {
                 type="text"
                 placeholder="Enter street address"
                 required
-                value={form.street}
-                onChange={handleChange}
+                value={street}
+                onChange={(e) => setStreet(e.target.value)}
                 className="bg-[#1A1A1A] border border-[#333] text-white placeholder-gray-500"
               />
             </div>
@@ -93,8 +115,8 @@ export default function AddAddressForm() {
                   type="text"
                   placeholder="Enter city"
                   required
-                  value={form.city}
-                  onChange={handleChange}
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
                   className="bg-[#1A1A1A] border border-[#333] text-white placeholder-gray-500"
                 />
               </div>
@@ -106,8 +128,8 @@ export default function AddAddressForm() {
                   type="text"
                   placeholder="Enter province/state"
                   required
-                  value={form.province}
-                  onChange={handleChange}
+                  value={province}
+                  onChange={(e) => setProvince(e.target.value)}
                   className="bg-[#1A1A1A] border border-[#333] text-white placeholder-gray-500"
                 />
               </div>
@@ -123,8 +145,8 @@ export default function AddAddressForm() {
                   type="text"
                   placeholder="Enter country"
                   required
-                  value={form.country}
-                  onChange={handleChange}
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
                   className="bg-[#1A1A1A] border border-[#333] text-white placeholder-gray-500"
                 />
               </div>
@@ -136,8 +158,8 @@ export default function AddAddressForm() {
                   type="text"
                   placeholder="Enter postal code"
                   required
-                  value={form.postal_code}
-                  onChange={handleChange}
+                  value={postalCode}
+                  onChange={(e) => setPostalCode(e.target.value)}
                   className="bg-[#1A1A1A] border border-[#333] text-white placeholder-gray-500"
                 />
               </div>
