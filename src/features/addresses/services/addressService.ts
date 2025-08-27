@@ -17,3 +17,15 @@ export const addressesCreate = async (token: any, id: any, Address: AddressCreat
         body: JSON.stringify(Address)
     })
 }
+
+// [GET] List all addresses for a contact
+export const addressesList = async (token: any, id: any) => {
+    return fetch(`${import.meta.env.VITE_API_PATH}/contacts/${id}/addresses`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': token,
+        }
+    })
+}
