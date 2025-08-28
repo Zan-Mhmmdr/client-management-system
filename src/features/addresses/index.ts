@@ -1,3 +1,3 @@
-import { addressesCreate } from "./services/addressService";
+import { addressesCreate, addressesEdit } from "./services/addressService";
 
-export { addressesCreate };
+export { addressesCreate, addressesEdit };
