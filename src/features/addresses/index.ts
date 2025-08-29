@@ -1,3 +1,4 @@
-import { addressesCreate, addressesEdit } from "./services/addressService";
+import { addressesCreate } from "./services/addressService";
+import AddressEdit from "./components/AddressEdit";
 
-export { addressesCreate, addressesEdit };
+export { addressesCreate, AddressEdit };
