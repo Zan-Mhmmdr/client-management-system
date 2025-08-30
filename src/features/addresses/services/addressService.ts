@@ -1,31 +1,67 @@
 type AddressCreate = {
-    street: string;
-    city: string;
-    province: string;
-    postal_code: string;
-    country: string;
-}
+  street: string;
+  city: string;
+  province: string;
+  postal_code: string;
+  country: string;
+};
 
-export const addressesCreate = async (token: any, id: any, Address: AddressCreate) => {
-    return fetch(`${import.meta.env.VITE_API_PATH}/contacts/${id}/addresses`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': token,
-        },
-        body: JSON.stringify(Address)
-    })
-}
+export const addressesCreate = async (
+  token: any,
+  id: any,
+  Address: AddressCreate
+) => {
+  return fetch(`${import.meta.env.VITE_API_PATH}/contacts/${id}/addresses`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: token,
+    },
+    body: JSON.stringify(Address),
+  });
+};
 
 // [GET] List all addresses for a contact
 export const addressesList = async (token: any, id: any) => {
-    return fetch(`${import.meta.env.VITE_API_PATH}/contacts/${id}/addresses`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': token,
-        }
-    })
+  return fetch(`${import.meta.env.VITE_API_PATH}/contacts/${id}/addresses`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: token,
+    },
+  });
+};
+
+
+
+type AddressUpdate = {
+    id: string;
+    street?: string;
+    city?: string;
+    province?: string;
+    postal_code?: string;
+    country?: string;
 }
+// [PUT] Update a specific address of a contact
+export const addressUpdate = async (
+  token: any,
+  id: any,
+  AddressUpdate: AddressUpdate
+) => {
+  return fetch(
+    `${import.meta.env.VITE_API_PATH}/contacts/${id}/addresses/${
+      AddressUpdate.id
+    }`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: token,
+      },
+      body: JSON.stringify(AddressUpdate),
+    }
+  );
+};
