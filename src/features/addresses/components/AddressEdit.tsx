@@ -5,6 +5,103 @@ import { Label } from "@radix-ui/react-label";
 import { Link } from "react-router-dom";
 
 const AddressEdit = () => {
+  const { id, addressId } = useParams();
+  const [contact, setContact] = useState<any>({});
+  const [street, setStreet] = useState("");
+  const [city, setCity] = useState("");
+  const [province, setProvince] = useState("");
+  const [country, setCountry] = useState("");
+  const [postal_code, setPostalCode] = useState("");
+  const [token, _] = useLocalStorage("token");
+  const navigate = useNavigate();
+
+const updatedAddressData = {
+  id: addressId,
+  street,
+  city,
+  province,
+  postal_code: postal_code,
+  country,
+};
+
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const response = await addressUpdate(token, id, updatedAddressData);
+      const responseBody = await response.json();
+      console.log(responseBody);
+
+      if (response.ok) {
+        // Clear form fields
+        setStreet("");
+        setCity("");
+        setProvince("");
+        setCountry("");
+        setPostalCode("");
+
+        await alertSuccess("Address created successfully!");
+
+        // No need to await navigation unless it’s a custom async function
+        navigate(`/dashboard/contacts/${id}`);
+        
+      } else {
+        const errorMessage = responseBody?.errors || "Something went wrong.";
+        await alertError(errorMessage);
+      }
+    } catch (error: any) {
+      console.error("Submission failed:", error);
+      await alertError("An unexpected error occurred. Please try again.");
+    }
+  };
+
+  const fetchContact = async () => {
+    try {
+      const response = await contactDetail(token, id);
+      const responseBody = await response.json();
+      console.log(responseBody);
+
+      if (response.ok) {
+        setContact(responseBody.data);
+      } else {
+        await alertError(
+          responseBody.errors || "An error occurred while fetching contact."
+        );
+      }
+    } catch (error) {
+      console.error("Fetch error:", error);
+      await alertError("Network or server error. Please try again later.");
+    }
+  };
+
+  const fetchAddress = async () => {
+    const response = await addressesDetail(token, id, addressId);
+    const responseBody = await response.json();
+    console.log(responseBody);
+
+    if (response.status === 200) {
+      setStreet(responseBody.data.street);
+      setCity(responseBody.data.city);
+      setProvince(responseBody.data.province);
+      setCountry(responseBody.data.country);
+      setPostalCode(responseBody.data.postal_code);
+    } else {
+      await alertError(responseBody.errors);
+    }
+  };
+
+  useEffectOnce(() => {
+    fetchContact().then(() => {
+      console.log("Edit Address fetched successfully");
+    });
+
+    fetchAddress().then(() => {
+      console.log("Address fetched successfully");
+    });
+  });
+
+const AddressEdit = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
