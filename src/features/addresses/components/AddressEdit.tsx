@@ -1,8 +1,9 @@
-import { Button } from "@/components/ui/button";
+import { Form, useNavigate, useParams } from "react-router-dom";
+import { addressUpdate } from "../services/addressService";
+import { useEffectOnce, useLocalStorage } from "react-use";
+import { useState } from "react";
+import { contactDetail } from "@/features/contacts/services/contactService";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@radix-ui/react-label";
-import { Link } from "react-router-dom";
 
 const AddressEdit = () => {
   const { id, addressId } = useParams();
@@ -15,15 +16,14 @@ const AddressEdit = () => {
   const [token, _] = useLocalStorage("token");
   const navigate = useNavigate();
 
-const updatedAddressData = {
-  id: addressId,
-  street,
-  city,
-  province,
-  postal_code: postal_code,
-  country,
-};
-
+  const updatedAddressData = {
+    id: addressId,
+    street,
+    city,
+    province,
+    postal_code: postal_code,
+    country,
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -41,18 +41,17 @@ const updatedAddressData = {
         setCountry("");
         setPostalCode("");
 
-        await alertSuccess("Address created successfully!");
+        alert("Address created successfully!");
 
         // No need to await navigation unless it’s a custom async function
         navigate(`/dashboard/contacts/${id}`);
-        
       } else {
         const errorMessage = responseBody?.errors || "Something went wrong.";
-        await alertError(errorMessage);
+        alert(errorMessage);
       }
     } catch (error: any) {
       console.error("Submission failed:", error);
-      await alertError("An unexpected error occurred. Please try again.");
+      alert("An unexpected error occurred. Please try again.");
     }
   };
 
@@ -65,13 +64,13 @@ const updatedAddressData = {
       if (response.ok) {
         setContact(responseBody.data);
       } else {
-        await alertError(
+        await alert(
           responseBody.errors || "An error occurred while fetching contact."
         );
       }
     } catch (error) {
       console.error("Fetch error:", error);
-      await alertError("Network or server error. Please try again later.");
+      alert("Network or server error. Please try again later.");
     }
   };
 
@@ -87,7 +86,7 @@ const updatedAddressData = {
       setCountry(responseBody.data.country);
       setPostalCode(responseBody.data.postal_code);
     } else {
-      await alertError(responseBody.errors);
+      alert(responseBody.errors);
     }
   };
 
@@ -101,172 +100,131 @@ const updatedAddressData = {
     });
   });
 
-const AddressEdit = () => {
   return (
-   import { Link } from "react-router-dom"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import * as z from "zod"
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "@/components/ui/card"
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+    <>
+      <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          <Link
+            to={`/dashboard/contacts/${id}`}
+            className="text-blue-500 hover:underline flex items-center"
+          >
+            ← Back to Contact Details
+          </Link>
+          <h1 className="text-2xl font-bold flex items-center gap-2">
+            Edit Address
+          </h1>
+        </div>
 
-const formSchema = z.object({
-  street: z.string().min(1, "Street is required"),
-  city: z.string().min(1, "City is required"),
-  province: z.string().min(1, "Province/State is required"),
-  country: z.string().min(1, "Country is required"),
-  postal_code: z.string().min(1, "Postal Code is required"),
-})
+        <Card className="max-w-2xl mx-auto">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white">
+                <i className="fas fa-user" />
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold">
+                  {contact.first_name} {contact.last_name}
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  {contact.email} • {contact.phone}
+                </p>
+              </div>
+            </CardTitle>
+          </CardHeader>
 
-export default function AddressEdit({ id, contact, onSubmit }: any) {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      street: contact?.address?.street || "",
-      city: contact?.address?.city || "",
-      province: contact?.address?.province || "",
-      country: contact?.address?.country || "",
-      postal_code: contact?.address?.postal_code || "",
-    },
-  })
+          <CardContent>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-5"
+              >
+                <FormField  
+                  control={form.control}
+                  name="street"
+                  render={({ field }) => (
+                    <FormItem >
+                      <FormLabel>Street</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter street address" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-4">
-        <Link
-          to={`/dashboard/contacts/${id}`}
-          className="text-blue-500 hover:underline flex items-center"
-        >
-          ← Back to Contact Details
-        </Link>
-        <h1 className="text-2xl font-bold flex items-center gap-2">
-          Edit Address
-        </h1>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <FormField
+                    control={form.control}
+                    name="city"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>City</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter city" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="province"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Province/State</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Enter province or state"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <FormField
+                    control={form.control}
+                    name="country"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Country</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter country" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="postal_code"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Postal Code</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter postal code" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="flex justify-end gap-3">
+                  <Link to={`/dashboard/contacts/${id}`}>
+                    <Button variant="outline">Cancel</Button>
+                  </Link>
+                  <Button type="submit">Save Changes</Button>
+                </div>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
       </div>
-
-      <Card className="max-w-2xl mx-auto">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white">
-              <i className="fas fa-user" />
-            </div>
-            <div>
-              <h2 className="text-lg font-semibold">
-                {contact.first_name} {contact.last_name}
-              </h2>
-              <p className="text-sm text-muted-foreground">
-                {contact.email} • {contact.phone}
-              </p>
-            </div>
-          </CardTitle>
-        </CardHeader>
-
-        <CardContent>
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-5"
-            >
-              <FormField
-                control={form.control}
-                name="street"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Street</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter street address" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <FormField
-                  control={form.control}
-                  name="city"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>City</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter city" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="province"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Province/State</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter province or state" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <FormField
-                  control={form.control}
-                  name="country"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Country</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter country" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="postal_code"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Postal Code</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter postal code" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="flex justify-end gap-3">
-                <Link to={`/dashboard/contacts/${id}`}>
-                  <Button variant="outline">Cancel</Button>
-                </Link>
-                <Button type="submit">Save Changes</Button>
-              </div>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-    </div>
-  )
-}
-
+    </>
   );
 };
 
