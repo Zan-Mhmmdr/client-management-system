@@ -12,6 +12,25 @@ const AddressEdit = () => {
   const [postal_code, setPostalCode] = useState("");
   const navigate = useNavigate();
 
+  const fetchContact = async () => {
+    try {
+      const response = await contactDetail(token, id);
+      const responseBody = await response.json();
+      console.log(responseBody);
+
+      if (response.ok) {
+        setContact(responseBody.data);
+      } else {
+        await alertError(
+          responseBody.errors || "An error occurred while fetching contact."
+        );
+      }
+    } catch (error) {
+      console.error("Fetch error:", error);
+      await alertError("Network or server error. Please try again later.");
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
