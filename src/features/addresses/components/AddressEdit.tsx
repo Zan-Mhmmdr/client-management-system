@@ -31,6 +31,22 @@ const AddressEdit = () => {
     }
   };
 
+  const fetchAddress = async () => {
+    const response = await addressesDetail(token, id, addressId);
+    const responseBody = await response.json();
+    console.log(responseBody);
+
+    if (response.status === 200) {
+      setStreet(responseBody.data.street);
+      setCity(responseBody.data.city);
+      setProvince(responseBody.data.province);
+      setCountry(responseBody.data.country);
+      setPostalCode(responseBody.data.postal_code);
+    } else {
+      await alertError(responseBody.errors);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
