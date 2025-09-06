@@ -2,6 +2,7 @@ import InputWithIcon from "@/components/common/InputWithIcon";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addressUpdate } from "../services/addressService";
+import { useEffectOnce } from "react-use";
 
 const AddressEdit = () => {
   const [contact, setContact] = useState("");
@@ -76,6 +77,17 @@ const AddressEdit = () => {
       alert("An unexpected error occurred. Please try again.");
     }
   };
+
+    useEffectOnce(() => {
+    fetchContact().then(() => {
+      console.log("Edit Address fetched successfully");
+    });
+
+    fetchAddress().then(() => {
+      console.log("Address fetched successfully");
+    });
+  });
+
 
   return (
     <>
