@@ -22,13 +22,13 @@ const AddressEdit = () => {
       if (response.ok) {
         setContact(responseBody.data);
       } else {
-        await alertError(
+         alert(
           responseBody.errors || "An error occurred while fetching contact."
         );
       }
     } catch (error) {
       console.error("Fetch error:", error);
-      await alertError("Network or server error. Please try again later.");
+       alert("Network or server error. Please try again later.");
     }
   };
 
@@ -44,7 +44,7 @@ const AddressEdit = () => {
       setCountry(responseBody.data.country);
       setPostalCode(responseBody.data.postal_code);
     } else {
-      await alertError(responseBody.errors);
+       alert(responseBody.errors);
     }
   };
 
