@@ -1,7 +1,7 @@
 import InputWithIcon from "@/components/common/InputWithIcon";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { addressUpdate } from "../services/addressService";
+import { addressesDetail, addressUpdate } from "../services/addressService";
 import { useEffectOnce } from "react-use";
 import { contactDetail } from "@/features/contacts/services/contactService";
 
