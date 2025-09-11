@@ -34,16 +34,14 @@ export const addressesList = async (token: any, id: any) => {
   });
 };
 
-
-
 type AddressUpdate = {
-    id: string;
-    street?: string;
-    city?: string;
-    province?: string;
-    postal_code?: string;
-    country?: string;
-}
+  id: string;
+  street?: string;
+  city?: string;
+  province?: string;
+  postal_code?: string;
+  country?: string;
+};
 // [PUT] Update a specific address of a contact
 export const addressUpdate = async (
   token: any,
@@ -62,6 +60,21 @@ export const addressUpdate = async (
         Authorization: token,
       },
       body: JSON.stringify(AddressUpdate),
+    }
+  );
+};
+
+// [GET] Get detail of a specific address by ID
+export const addressesDetail = async (token: any, id: any, addressId: any) => {
+  return fetch(
+    `${import.meta.env.VITE_API_PATH}/contacts/${id}/addresses/${addressId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: token,
+      },
     }
   );
 };

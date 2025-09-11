@@ -1,8 +1,12 @@
 import InputWithIcon from "@/components/common/InputWithIcon";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { addressUpdate } from "../services/addressService";
+
 import { useLocalStorage } from "react-use";
+import { addressesDetail, addressUpdate } from "../services/addressService";
+import { useEffectOnce } from "react-use";
+import { contactDetail } from "@/features/contacts/services/contactService";
+
 
 const AddressEdit = () => {
   const [contact, setContact] = useState("");
@@ -13,6 +17,41 @@ const AddressEdit = () => {
   const [postal_code, setPostalCode] = useState("");
   const navigate = useNavigate();
   const [token, _] = useLocalStorage("token", "");
+
+  const fetchContact = async () => {
+    try {
+      const response = await contactDetail(token, id);
+      const responseBody = await response.json();
+      console.log(responseBody);
+
+      if (response.ok) {
+        setContact(responseBody.data);
+      } else {
+         alert(
+          responseBody.errors || "An error occurred while fetching contact."
+        );
+      }
+    } catch (error) {
+      console.error("Fetch error:", error);
+       alert("Network or server error. Please try again later.");
+    }
+  };
+
+  const fetchAddress = async () => {
+    const response = await addressesDetail(token, id, addressId);
+    const responseBody = await response.json();
+    console.log(responseBody);
+
+    if (response.status === 200) {
+      setStreet(responseBody.data.street);
+      setCity(responseBody.data.city);
+      setProvince(responseBody.data.province);
+      setCountry(responseBody.data.country);
+      setPostalCode(responseBody.data.postal_code);
+    } else {
+       alert(responseBody.errors);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,6 +82,17 @@ const AddressEdit = () => {
       alert("An unexpected error occurred. Please try again.");
     }
   };
+
+    useEffectOnce(() => {
+    fetchContact().then(() => {
+      console.log("Edit Address fetched successfully");
+    });
+
+    fetchAddress().then(() => {
+      console.log("Address fetched successfully");
+    });
+  });
+
 
   return (
     <>
