@@ -1,7 +1,8 @@
 import InputWithIcon from "@/components/common/InputWithIcon";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { addressUpdate } from "../services/addressService";
+import { useLocalStorage } from "react-use";
 
 const AddressEdit = () => {
   const [contact, setContact] = useState("");
@@ -11,6 +12,7 @@ const AddressEdit = () => {
   const [country, setCountry] = useState("");
   const [postal_code, setPostalCode] = useState("");
   const navigate = useNavigate();
+  const [token, _] = useLocalStorage("token", "");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -166,3 +168,5 @@ const AddressEdit = () => {
     </>
   );
 };
+
+export default AddressEdit;
