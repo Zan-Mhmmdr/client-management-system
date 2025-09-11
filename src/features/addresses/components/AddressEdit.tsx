@@ -1,9 +1,12 @@
 import InputWithIcon from "@/components/common/InputWithIcon";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
+import { useLocalStorage } from "react-use";
 import { addressesDetail, addressUpdate } from "../services/addressService";
 import { useEffectOnce } from "react-use";
 import { contactDetail } from "@/features/contacts/services/contactService";
+
 
 const AddressEdit = () => {
   const [contact, setContact] = useState("");
@@ -13,6 +16,7 @@ const AddressEdit = () => {
   const [country, setCountry] = useState("");
   const [postal_code, setPostalCode] = useState("");
   const navigate = useNavigate();
+  const [token, _] = useLocalStorage("token", "");
 
   const fetchContact = async () => {
     try {
@@ -214,3 +218,5 @@ const AddressEdit = () => {
     </>
   );
 };
+
+export default AddressEdit;
